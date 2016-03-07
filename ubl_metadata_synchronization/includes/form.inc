@@ -31,79 +31,79 @@ function number_of_sources() {
 function ubl_metadata_synchronization_settings_form(array $form, array &$form_state) {
   module_load_include('inc','ubl_metadata_synchronization','includes/retrieval_oaipmh');
 
-   $form = array();
+   $form = [];
 
-   $form['ubl_metadata_synchronization_process_fieldset'] = array(
+   $form['ubl_metadata_synchronization_process_fieldset'] = [
      '#type' => 'fieldset',
      '#title' => t('Process synchronization'),
-   );
-   $form['ubl_metadata_synchronization_process_fieldset']['last_synchronization_date'] = array(
+   ];
+   $form['ubl_metadata_synchronization_process_fieldset']['last_synchronization_date'] = [
      '#type' => 'textfield',
      '#title' => t('Last synchronization date'),
      '#default_value' => variable_get('ubl_metadata_synchronization_last_synchronization_date'),
      '#description' => t('Use a date with the following format: YYYY-MM-DD'),
-   );
-   $form['ubl_metadata_synchronization_process_fieldset']['synchronize_start'] = array(
-       '#type' => 'submit',
-       '#value' => t('Start synchronization'),
-       '#submit' => array('ubl_metadata_synchronization_start_sync_submit'),
-     );
+   ];
+   $form['ubl_metadata_synchronization_process_fieldset']['synchronize_start'] = [
+     '#type' => 'submit',
+     '#value' => t('Start synchronization'),
+     '#submit' => ['ubl_metadata_synchronization_start_sync_submit'],
+   ];
 
-   $form['ubl_metadata_synchronization_sources_fieldset'] = array(
+   $form['ubl_metadata_synchronization_sources_fieldset'] = [
      '#type' => 'fieldset',
      '#title' => t('Sources'),
      '#description' => t('The metadata synchronization can use multiple sources. When synchronizing, each source is tried in order. If a valid identifier is found and metadata can be retrieved with it using the retrieval type and url, other sources are skipped. In the synchronize page of a specific item you can see which source is used.'),
-   );
+   ];
    for ($i = 1; $i <= number_of_sources(); $i++) {
-     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i] = array(
+     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i] = [
         '#type' => 'fieldset',
-        '#title' => t('Source '.$i),   
-     );
+        '#title' => t('Source '.$i),
+     ];
      if (isset($form_state['input']['source'.$i.'_retrieval_url']) && strlen($form_state['input']['source'.$i.'_retrieval_url']) > 0) {
        $retrievalurl = $form_state['input']['source'.$i.'_retrieval_url'];
      }
-     else { 
+     else {
        $retrievalurl = variable_get('ubl_metadata_synchronization_source'.$i.'_retrieval_url');
      }
-     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['source'.$i.'_retrieval_url'] = array(
+     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['source'.$i.'_retrieval_url'] = [
         '#type' => 'textfield',
         '#title' => t('Retrieval URL'),
         '#description' => t('URL of an end point that is capable of supplying data.'),
         '#default_value' => $retrievalurl,
-     );
+     ];
      if (isset($retrievalurl) && strlen($retrievalurl) > 0) {
        $repoName = ubl_metadata_synchronization_test_oai_pmh_url($retrievalurl);
        if (isset($repoName) && strlen($repoName) > 0) {
-         $markup = format_string('<img src="@image_url"/>!message', array(
+         $markup = format_string('<img src="@image_url"/>!message', [
           '@image_url' => url('misc/watchdog-ok.png'),
-          '!message' => t('Successfully connected to OAI-PMH server named @name.', array( '@name' => $repoName )),
-        ));
+          '!message' => t('Successfully connected to OAI-PMH server named @name.', ['@name' => $repoName ]),
+        ]);
        }
        else {
-         $markup = format_string('<img src="@image_url"/>!message', array(
+         $markup = format_string('<img src="@image_url"/>!message', [
           '@image_url' => url('misc/watchdog-error.png'),
           '!message' => t('The URL above is not a valid URL for an OAI-PMH server.'),
-        ));
+        ]);
        }
-       $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['infobox'] = array(
+       $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['infobox'] = [
          '#type' => 'item',
          '#markup' => $markup,
-       );
+       ];
      }
 
-     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['source'.$i.'_set'] = array(
+     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['source'.$i.'_set'] = [
         '#type' => 'textfield',
         '#title' => t('Set'),
         '#default_value' => variable_get('ubl_metadata_synchronization_source'.$i.'_set'),
         '#description' => t('The sepcific set to use at this end point, leave empty to use no set.'),
-     );
+     ];
 
-     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['source'.$i.'_id_prefix'] = array(
+     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['source'.$i.'_id_prefix'] = [
         '#type' => 'textfield',
         '#title' => t('Prefix ID'),
         '#default_value' => variable_get('ubl_metadata_synchronization_source'.$i.'_id_prefix'),
         '#description' => t('The default prefix that is used if the identifier appears to be missing the prefix.'),
-     );
+     ];
      $desc = t('The datastream that is used to retrieve the ID for synchronization');
      if ($i == 1) {
        $desc .= t(' for example: MODS');
@@ -111,12 +111,12 @@ function ubl_metadata_synchronization_settings_form(array $form, array &$form_st
      if ($i == 2) {
        $desc .= t(' for example: SYNCID');
      }
-     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['source'.$i.'_dsid'] = array(
+     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['source'.$i.'_dsid'] = [
         '#type' => 'textfield',
-        '#title' => t('Datastream ID'),   
+        '#title' => t('Datastream ID'),
         '#default_value' => variable_get('ubl_metadata_synchronization_source'.$i.'_dsid'),
         '#description' => $desc,
-     );
+     ];
      $desc = t('The XPath to search the datastream that is used to retrieve the ID for synchronization');
      if ($i == 1) {
        $desc .= t(' for example: /mods:mods/mods:recordInfo/mods:recordIdentifier[@source=\'NL-LeU\']');
@@ -124,18 +124,18 @@ function ubl_metadata_synchronization_settings_form(array $form, array &$form_st
      if ($i == 2) {
        $desc .= t(' for example leave blank, if used with datastream ID SYNCID.');
      }
-     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['source'.$i.'_path'] = array(
+     $form['ubl_metadata_synchronization_sources_fieldset']['group'.$i]['source'.$i.'_path'] = [
         '#type' => 'textfield',
-        '#title' => t('XPath ID'),   
+        '#title' => t('XPath ID'),
         '#default_value' => variable_get('ubl_metadata_synchronization_source'.$i.'_path'),
         '#description' => $desc,
-     );
+     ];
    }
-   $form['ubl_metadata_synchronization_sources_fieldset']['submit'] = array(
+   $form['ubl_metadata_synchronization_sources_fieldset']['submit'] = [
        '#type' => 'submit',
        '#value' => t('Save configuration'),
-       '#submit' => array('ubl_metadata_synchronization_settings_form_submit'),
-     );
+       '#submit' => ['ubl_metadata_synchronization_settings_form_submit'],
+     ];
 
 
    return $form;
@@ -151,7 +151,7 @@ function ubl_metadata_synchronization_settings_form_validate(array $form, array 
   for ($i = 1; $i <= number_of_sources(); $i++) {
     $dsid = $form_state['values']['source'.$i.'_dsid'];
     $path = $form_state['values']['source'.$i.'_path'];
-    
+
     if (strlen($form_state['values']['source'.$i.'_retrieval_url']) > 0) {
       $repoName = ubl_metadata_synchronization_test_oai_pmh_url($form_state['values']['source'.$i.'_retrieval_url']);
       if($repoName == FALSE) {
@@ -160,7 +160,7 @@ function ubl_metadata_synchronization_settings_form_validate(array $form, array 
       else {
         //drupal_set_message(t('OAI-PMH responded with name: @name', array('@name' => $repoName)));
       }
-    
+
       if (strlen($dsid) == 0 && strlen($path) > 0) {
         form_set_error('source'.$i.'_path', t('Source '.$i.' has an xpath but not a datastream id'));
       }
@@ -168,7 +168,7 @@ function ubl_metadata_synchronization_settings_form_validate(array $form, array 
         // check xpath
         $doc = new DOMDocument;
         $xpath = ubl_metadata_synchronization_new_xpath($doc);
-  
+
         if(@$xpath->query($path) === false) {
           form_set_error('source'.$i.'_path', t('Source '.$i.' has an invalid xpath'));
         }
@@ -177,10 +177,10 @@ function ubl_metadata_synchronization_settings_form_validate(array $form, array 
     else {
       if (strlen($path) > 0) {
         form_set_error('source'.$i.'_path', t('Source '.$i.' has an xpath but not a retrieval url'));
-      }  
+      }
       if (strlen($dsid) > 0) {
         form_set_error('source'.$i.'_path', t('Source '.$i.' has a datastream id but not a retrieval url'));
-      }  
+      }
     }
   }
 }
@@ -208,7 +208,7 @@ function ubl_metadata_synchronization_start_sync_submit(array $form, array &$for
   module_load_include('inc','ubl_metadata_synchronization','includes/synchronize');
   $date = $form_state['values']['last_synchronization_date'];
 
-  ubl_metadata_synchronization_start_sync(array('date' => $date));
+  ubl_metadata_synchronization_start_sync(['date' => $date]);
 }
 
 /**
@@ -227,16 +227,16 @@ function sync_id_editor_form(array $form, array &$form_state, AbstractObject $ob
   if (isset($object['SYNCID'])) {
     $saved_sync_id = $object['SYNCID']->content;
   }
-  $form = array(
-    'pid' => array(
+  $form = [
+    'pid' => [
       '#type' => 'hidden',
       '#value' => $object->id,
-    ),
-  );
-  $form['ubl_metadata_synchronization_sync_item_sources'] = array(
+    ],
+  ];
+  $form['ubl_metadata_synchronization_sync_item_sources'] = [
     '#type' => 'fieldset',
     '#title' => t('Sources'),
-  );
+  ];
   for ($i = 1; $i <= number_of_sources(); $i++) {
     $retrieveurl = variable_get('ubl_metadata_synchronization_source'.$i.'_retrieval_url');
     $idprefix = variable_get('ubl_metadata_synchronization_source'.$i.'_id_prefix');
@@ -249,7 +249,7 @@ function sync_id_editor_form(array $form, array &$form_state, AbstractObject $ob
       }
       $foundxml = NULL;
       $foundid = ubl_metadata_synchronization_get_identifier($object,$dsid,$xpath);
-    
+
       if (isset($foundid)) {
         $xml = ubl_metadata_synchronization_retrieve_oaipmh_metadata($retrieveurl,$foundid,$idprefix);
         if ($xml !== FALSE && strlen($xml) > 0) {
@@ -257,17 +257,17 @@ function sync_id_editor_form(array $form, array &$form_state, AbstractObject $ob
           if (!isset($sync_source)) {
             $sync_source = $i;
           }
-        } 
+        }
       }
 
       $markup = '<DIV>Source '.$i.': ';
       if (isset($foundid)) {
-        $markup .= 'Identifier '.$foundid.' found in datastream '.$dsid; 
+        $markup .= 'Identifier '.$foundid.' found in datastream '.$dsid;
         if (isset($foundxml)) {
-          $markup .= ' that can be used to retrieve metadata from '.$retrieveurl.'.';      
+          $markup .= ' that can be used to retrieve metadata from '.$retrieveurl.'.';
         }
         else {
-          $markup .= ' but no metadata was found for it.';      
+          $markup .= ' but no metadata was found for it.';
         }
       }
       else {
@@ -275,53 +275,53 @@ function sync_id_editor_form(array $form, array &$form_state, AbstractObject $ob
         if (isset($xpath) && strlen($xpath) > 0) {
           $markup .= ' for xpath '.$xpath;
         }
-        $markup .= ' in datastream '.$dsid.'.'; 
+        $markup .= ' in datastream '.$dsid.'.';
       }
       $markup .= '</DIV>';
-      $form['ubl_metadata_synchronization_sync_item_sources']['source'.$i] = array(
+      $form['ubl_metadata_synchronization_sync_item_sources']['source'.$i] = [
          '#type' => 'item',
          '#markup' => $markup,
-      ); 
+       ];
     }
-  }  
-  $form['sync_source'] = array(
+  }
+  $form['sync_source'] = [
     '#type' => 'hidden',
     '#value' => $sync_source,
-  );
-  $form['source_url_nr'] = array(
+  ];
+  $form['source_url_nr'] = [
     '#type' => 'hidden',
     '#value' => $source_with_url,
-  );
-  $syncbuttontitle = ($sync_source > 0)?t('Synchronize now with source !source', array('!source' => $sync_source)):t('Cannot synchronize');
-  $form['ubl_metadata_synchronization_sync_item_sources']['synchronize'] = array(
+  ];
+  $syncbuttontitle = ($sync_source > 0)?t('Synchronize now with source !source', ['!source' => $sync_source]):t('Cannot synchronize');
+  $form['ubl_metadata_synchronization_sync_item_sources']['synchronize'] = [
     '#type' => 'submit',
     '#value' => $syncbuttontitle,
-    '#submit' => array('sync_id_editor_form_synchronize_submit'),
+    '#submit' => ['sync_id_editor_form_synchronize_submit'],
     '#disabled' => !($sync_source > 0),
-  );
-  $form['ubl_metadata_synchronization_sync_item_set_identifier'] = array(
+  ];
+  $form['ubl_metadata_synchronization_sync_item_set_identifier'] = [
     '#type' => 'fieldset',
     '#title' => t('Synchronize or set specific identifier'),
-  );
-  $form['ubl_metadata_synchronization_sync_item_set_identifier']['sync_id'] = array(
+  ];
+  $form['ubl_metadata_synchronization_sync_item_set_identifier']['sync_id'] = [
     '#title' => t('Synchronization Identifier'),
     '#default_value' => $saved_sync_id,
     '#description' => t('The identifier of the metadata to synchronize with. Leave empty if this identifier can be found in the metadata of this object.'),
     // Double the normal length.
     '#size' => 120,
     '#type' => 'textfield',
-  );
+  ];
   $form['ubl_metadata_synchronization_sync_item_set_identifier']['sync_w_syncid'] = array(
     '#type' => 'submit',
-    '#value' => t('Synchronize with this Sync ID and source !source', array('!source' => $source_with_url)),
+    '#value' => t('Synchronize with this Sync ID and source !source', ['!source' => $source_with_url]),
     '#submit' => array('sync_id_editor_form_synchronize_with_syncid_submit'),
     '#disabled' => !($source_with_url > 0),
   );
-  $form['ubl_metadata_synchronization_sync_item_set_identifier']['submit'] = array(
+  $form['ubl_metadata_synchronization_sync_item_set_identifier']['submit'] = [
     '#type' => 'submit',
     '#value' => t('Set Sync ID'),
-    '#submit' => array('sync_id_editor_form_set_sync_id_submit'),
-  );
+    '#submit' => ['sync_id_editor_form_set_sync_id_submit'],
+  ];
   return $form;
 }
 
@@ -335,7 +335,7 @@ function sync_id_editor_form_set_sync_id_submit(array $form, array &$form_state)
 
   if (isset($object['SYNCID'])) {
     if ((!isset($syncid)) || strlen($syncid) == 0) {
-      unset($object['SYNCID']); 
+      unset($object['SYNCID']);
     }
     else if ($object['SYNCID']->content !== $syncid) {
       $object['SYNCID']->content = $syncid;
@@ -362,7 +362,7 @@ function sync_id_editor_form_synchronize_with_syncid_submit(array $form, array &
   $syncid = $form_state['values']['sync_id'];
 
   if (strlen($syncid) == 0) {
-    drupal_set_message("specify a Sync ID",'error'); 
+    drupal_set_message("specify a Sync ID",'error');
     return;
   }
   $sourceurlnr = $form_state['values']['source_url_nr'];
@@ -386,7 +386,7 @@ function sync_id_editor_form_synchronize_submit(array $form, array &$form_state)
   module_load_include('inc','ubl_metadata_synchronization','includes/synchronize');
   $object = $form_state['object'];
   $syncsource = $form_state['values']['sync_source'];
-  
+
   $retrieveurl = variable_get('ubl_metadata_synchronization_source'.$syncsource.'_retrieval_url');
   $idprefix = variable_get('ubl_metadata_synchronization_source'.$syncsource.'_id_prefix');
   $dsid = variable_get('ubl_metadata_synchronization_source'.$syncsource.'_dsid');

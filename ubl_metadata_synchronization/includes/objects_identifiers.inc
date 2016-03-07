@@ -24,14 +24,14 @@ function ubl_metadata_synchronization_get_identifier(AbstractObject $object,$dsi
         }
       }
       else {
-        drupal_set_message(t('Datastream !dsid contains invalid XML data', array('!dsid' => $dsid)), 'warning');
+        drupal_set_message(t('Datastream !dsid contains invalid XML data', ['!dsid' => $dsid]), 'warning');
       }
     }
     else {
       $syncid = $content;
     }
   }
-  return $syncid; 
+  return $syncid;
 }
 
 function ubl_metadata_synchronization_new_xpath($domdoc) {
