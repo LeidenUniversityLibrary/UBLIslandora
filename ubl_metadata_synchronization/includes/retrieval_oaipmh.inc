@@ -12,9 +12,9 @@ function ubl_metadata_synchronization_retrieve_oaipmh_metadata($oaibaseurl,$sync
   if (isset($idprefix)) {
     if (strlen($syncid) < strlen($idprefix)) {
       $syncid = $idprefix . $syncid;
-    } 
+    }
   }
-  $oaigetrecurl = $oaibaseurl 
+  $oaigetrecurl = $oaibaseurl
                 . "?verb=GetRecord"
                 . "&metadataPrefix=marc21"
                 . "&identifier=" . $syncid;
@@ -25,11 +25,11 @@ function ubl_metadata_synchronization_retrieve_oaipmh_metadata($oaibaseurl,$sync
     return FALSE;
   }
 
-  $transform_args = array(
+  $transform_args = [
     'xsl' => drupal_get_path('module', 'ubl_metadata_synchronization') . '/xsl/OAIMARC2MARC21slim.xsl',
     'input' => $data,
-  );
-  $transformed_xml = ubl_metadata_synchronization_run_xsl_transform($transform_args); 
+  ];
+  $transformed_xml = ubl_metadata_synchronization_run_xsl_transform($transform_args);
 
   return $transformed_xml;
 }
@@ -43,13 +43,13 @@ function ubl_metadata_synchronization_test_oai_pmh_url($url) {
      if (isset($data)) {
        $pattern = '#repositoryName>([^<]+)#s';
        $preg_result = preg_match($pattern,$data,$matches);
-  
+
        if ($preg_result == 1) {
          return $matches[1];
        }
      }
   }
-  return FALSE; 
+  return FALSE;
 }
 
 function ubl_metadata_synchronization_run_xsl_transform($info) {
@@ -88,9 +88,9 @@ function ubl_metadata_synchronization_identifiers_for_changed_metadata($url, $oa
      $data = @file_get_contents($oailiurl);
 
      if (isset($data)) {
-       $result = array();
+       $result = [];
 
-       $domdoc = new DOMDocument(); 
+       $domdoc = new DOMDocument();
        if ($domdoc->loadXML($data)) {
          $domxpath = ubl_metadata_synchronization_new_xpath($domdoc);
          $domnodelist = $domxpath->query('/oai:OAI-PMH/oai:error');
@@ -120,5 +120,5 @@ function ubl_metadata_synchronization_identifiers_for_changed_metadata($url, $oa
        return $result;
      }
   }
-  return FALSE; 
+  return FALSE;
 }
