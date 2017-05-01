@@ -51,47 +51,55 @@ function ubl_check_datastreams_generate_form_submit(array $form, array &$form_st
   $dsid = $form_state['values']['dsid'];
 
   $object = islandora_object_load($objectid);
+  $success = FALSE;
   if ($object) {
     if ($dsid === 'JPG') {
-      if (module_load_include('inc', 'islandora_large_image') !== FALSE) {
+      if (module_load_include('inc', 'islandora_large_image', 'includes/derivatives') !== FALSE) {
         islandora_large_image_create_jpg_derivative($object, FALSE);
+        $success = isset($object[$dsid]);
       }
     }
     elseif ($dsid === 'JP2') {
-      if (module_load_include('inc', 'islandora_large_image') !== FALSE) {
+      if (module_load_include('inc', 'islandora_large_image', 'includes/derivatives') !== FALSE) {
         islandora_large_image_create_jp2_derivative($object, FALSE);
+        $success = isset($object[$dsid]);
       }
     }
     elseif ($dsid === 'TN') {
-      if (module_load_include('inc', 'islandora_large_image') !== FALSE) {
+      if (module_load_include('inc', 'islandora_large_image', 'includes/derivatives') !== FALSE) {
         islandora_large_image_create_tn_derivative($object, FALSE);
+        $success = isset($object[$dsid]);
       }
     }
     elseif ($dsid === 'PDF') {
-      if (module_load_include('inc', 'islandora_solution_pack_pdf') !== FALSE) {
+      if (module_load_include('inc', 'islandora_solution_pack_pdf', 'includes/derivatives') !== FALSE) {
         islandora_pdf_add_pdfa_derivative($object, FALSE);
+        $success = isset($object[$dsid]);
       }
     }
     elseif ($dsid === 'OCR') {
-      if (module_load_include('inc', 'islandora_ocr') !== FALSE) {
+      if (module_load_include('inc', 'islandora_ocr', 'includes/derivatives') !== FALSE) {
         islandora_ocr_derive_ocr($object, FALSE);
+        $success = isset($object[$dsid]);
       }
     }
     elseif ($dsid === 'HOCR') {
-      if (module_load_include('inc', 'islandora_ocr') !== FALSE) {
+      if (module_load_include('inc', 'islandora_ocr', 'includes/derivatives') !== FALSE) {
         islandora_ocr_derive_hocr($object, FALSE);
+        $success = isset($object[$dsid]);
       }
     }
     elseif ($dsid === 'HDL') {
-      if (module_load_include('inc', 'islandora_handle') !== FALSE) {
+      if (module_load_include('inc', 'islandora_handle', 'includes/derivatives') !== FALSE) {
         if (function_exists('islandora_handle_append_handle_from_configuration')) {
-          $result = islandora_handle_append_handle_from_configuration($object);
+          $result = islandora_handle_append_handle_from_configuration($object, FALSE, array('destination_dsid' => 'MODS'));
         }
-        else if (function_exists('islandora_handle_append_handles_from_configuration')) {
-          $result = islandora_handle_append_handles_from_configuration($object);
+        else if (function_exists('islandora_handles_append_handles_from_configuration')) {
+          $result = islandora_handle_append_handles_from_configuration($object, FALSE, array('destination_dsid' => 'MODS'));
         }
         if (isset($result) && $result['success'] === TRUE) {
           islandora_handle_add_to_dc_datastream($object);
+          $success = TRUE;
         }
       }
     }
@@ -99,12 +107,13 @@ function ubl_check_datastreams_generate_form_submit(array $form, array &$form_st
       if ($object['JP2']) {
         if (module_load_include('inc', 'islandora_paged_content', 'includes/utilities') !== FALSE) {
           islandora_paged_content_add_dimensions_relationships($object);
+          $success = TRUE;
         }
       }
     }
   }
 
-  if (isset($object[$dsid])) {
+  if ($success) {
     drupal_set_message(t('Derivative @dsid successfully created.', array('@dsid' => $dsid)), 'status');
   }
   else {
@@ -285,3 +294,4 @@ function ubl_check_datastreams_children_form_submit(array $form, array &$form_st
     }
   }
 }
+
