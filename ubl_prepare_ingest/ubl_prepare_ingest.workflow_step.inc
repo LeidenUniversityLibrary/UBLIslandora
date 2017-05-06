@@ -1482,9 +1482,9 @@ function work_copy_file(array $info, array $config, &$data, &$context, $extent) 
   }
   if ($extent & WORK_EXTENT_ONLY_DRY_RUN) {
     module_load_include('inc', 'ubl_prepare_ingest', 'includes/pifs');
-    $sourcefilepath = $config['source_filepath'];
-    $targetfilepath = $config['target_filepath'];
     foreach ($data as $current => $d) {
+      $sourcefilepath = $config['source_filepath'];
+      $targetfilepath = $config['target_filepath'];
       $sourcefilepath = fill_out_template($sourcefilepath, $d);
       if (!pifs_is_file($sourcefilepath, $context)) {
 	$results[] = array('text' => t("File '@file' does not exist.",
@@ -1510,9 +1510,9 @@ function work_copy_file(array $info, array $config, &$data, &$context, $extent) 
     }
   }
   if ($extent & WORK_EXTENT_ONLY_DO_ALL) {
-    $sourcefilepath = $config['source_filepath'];
-    $targetfilepath = $config['target_filepath'];
     foreach ($data as $current => $d) {
+      $sourcefilepath = $config['source_filepath'];
+      $targetfilepath = $config['target_filepath'];
       $sourcefilepath = fill_out_template($sourcefilepath, $d);
       if (!is_file($sourcefilepath)) {
         $results[] = array('text' => t("File '@file' does not exist.",
@@ -1578,9 +1578,9 @@ function work_write_file(array $info, array $config, &$data, &$context, $extent)
   if ($extent & WORK_EXTENT_ONLY_DRY_RUN) {
     module_load_include('inc', 'ubl_prepare_ingest', 'includes/pifs');
     $contentkey = $config['content_key_name'];
-    $targetfilepath = $config['target_filepath'];
     foreach ($data as $current => $d) {
       $content = $d[$contentkey];
+      $targetfilepath = $config['target_filepath'];
       $targetfilepath = fill_out_template($targetfilepath, $d);
       $targetdirectory = dirname($targetfilepath);
       if (!pifs_is_dir($targetdirectory, $context)) {
@@ -1607,9 +1607,9 @@ function work_write_file(array $info, array $config, &$data, &$context, $extent)
   }
   if ($extent & WORK_EXTENT_ONLY_DO_ALL) {
     $contentkey = $config['content_key_name'];
-    $targetfilepath = $config['target_filepath'];
     foreach ($data as $current => $d) {
       $content = $d[$contentkey];
+      $targetfilepath = $config['target_filepath'];
       $targetfilepath = fill_out_template($targetfilepath, $d);
       $targetdirectory = dirname($targetfilepath);
       if (!is_dir($targetdirectory)) {
@@ -1865,9 +1865,9 @@ function work_parse_xml(array $info, array $config, &$data, &$context, $extent) 
   }
   if (($extent & WORK_EXTENT_ONLY_DRY_RUN) || ($extent & WORK_EXTENT_ONLY_DO_ALL)) {
     module_load_include('inc', 'ubl_prepare_ingest', 'includes/pifs');
-    $filepath = $config['filepath'];
     $xmlkey = $config['xml_key_name'];
     foreach ($data as $current => $d) {
+      $filepath = $config['filepath'];
       $filepath = fill_out_template($filepath, $d);
       if (!pifs_is_file($filepath, $context)) {
         $results[] = array('text' => t("File '@file' does not exist.",
