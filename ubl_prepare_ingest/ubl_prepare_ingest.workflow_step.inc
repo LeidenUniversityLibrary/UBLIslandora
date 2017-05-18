@@ -1518,7 +1518,7 @@ function work_copy_file(array $info, array $config, &$data, &$context, $extent) 
         $results[] = array('text' => t("File '@file' does not exist.",
                   array('@file' => $sourcefilepath)), 'type' => 'run_error');
       }
-      $targetfilepath = fill_out_template($targetfilename, $d);
+      $targetfilepath = fill_out_template($targetfilepath, $d);
       if ((substr($targetfilepath, -1) === DIRECTORY_SEPARATOR) || is_dir($targetfilepath)) {
         $targetfilepath = $targetfilepath . DIRECTORY_SEPARATOR . basename($sourcefilepath);
       }
@@ -2725,10 +2725,15 @@ function work_validate_book(array $info, array $config, &$data, &$context, $exte
     }
     */
     $mime_detect = new MimeDetect();
+    $importdirectory = rtrim($importdirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR; 
     $filenames = pifs_full_filenames_from_directory($importdirectory, $context, '', TRUE, TRUE);
     $booksarray = array();
     foreach ($filenames as $filename) {
       $relpath = preg_replace('#^' . $importdirectory . '/*#', '', $filename);
+      if (!$relpath) {
+        $results[] = array('text' => t("Unexpected file at '@filename'.", array('@filename' => $filename)), 'type' => 'validate_error');
+        continue;
+      }
       $relpathparts = explode(DIRECTORY_SEPARATOR, $relpath);
       $bookname = $relpathparts[0];
       if (pifs_is_dir($filename, $context)) {

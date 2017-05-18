@@ -62,6 +62,7 @@ function ubl_prepare_ingest_run_workflow($workflowid, array &$workflowdata, $ext
 
 function ubl_prepare_ingest_full_run_workflow($workflowid) {
   module_load_include('inc', 'ubl_prepare_ingest', 'ubl_prepare_ingest.workflow_step');
+  module_load_include('inc', 'ubl_prepare_ingest', 'includes/constants');
   module_load_include('inc', 'ubl_prepare_ingest', 'includes/db');
 
   $extent = WORK_EXTENT_DO_ALL;
