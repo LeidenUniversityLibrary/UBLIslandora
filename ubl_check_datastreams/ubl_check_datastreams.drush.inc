@@ -68,6 +68,7 @@ function drush_ubl_check_datastreams_check_datastreams_validate() {
     }
   }
   elseif ($objecttype === 'batch') {
+    module_load_include('inc', 'islandora_batch', 'includes/db');
     $itemids = islandora_batch_get_queued_items_for_set($objectid);
     if (!($itemids && count($itemids) > 0)) {
       return drush_set_error("Identifier '$objectid' does not resolve to a batch set");

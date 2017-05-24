@@ -158,6 +158,8 @@ function ubl_check_datastreams_preprocess_islandora_default_edit(array &$variabl
  * Helper function to get the info about the properties of a datastream.
  */
 function ubl_check_datastreams_datastream_property_info($object, $includelink = FALSE) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+
   static $generatable = NULL;
   if (is_null($generatable)) {
     if (module_load_include('inc', 'islandora_large_image', 'includes/derivatives') !== FALSE) {
