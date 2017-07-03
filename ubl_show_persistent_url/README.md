@@ -1,3 +1,5 @@
+Deprecated: use module at https://github.com/LeidenUniversityLibrary/ubl_show_persistent_url
+
 ubl_show_persistent_url
 =======================
 
