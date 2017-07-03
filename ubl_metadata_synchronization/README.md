@@ -1,3 +1,5 @@
+Deprecated: Use module at https://github.com/LeidenUniversityLibrary/islandora_metadata_synchronization
+
 # ubl_metadata_synchronization
 ===========================
 
