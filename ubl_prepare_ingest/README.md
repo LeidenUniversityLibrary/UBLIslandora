@@ -1,3 +1,5 @@
+Deprecated: use module at https://github.com/LeidenUniversityLibrary/islandora_prepare_ingest
+
 # Prepare Ingest
 
 ## Introduction
