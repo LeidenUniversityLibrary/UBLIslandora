@@ -1,3 +1,6 @@
+Deprecated: Use module at https://github.com/LeidenUniversityLibrary/islandora_batch_modify
+
+
 # ubl_batch_ingest_datastreams
 ===========================
 
