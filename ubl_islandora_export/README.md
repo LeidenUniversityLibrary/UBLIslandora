@@ -1,3 +1,6 @@
+Deprecated: Use module at https://github.com/LeidenUniversityLibrary/islandora_export
+ +
+
 # Islandora Export
 
 ## Introduction
