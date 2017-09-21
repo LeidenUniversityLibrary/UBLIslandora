@@ -1,3 +1,6 @@
+Deprecated: Use module at https://github.com/LeidenUniversityLibrary/ubl_batch_purge_items
+
+
 ubl_batch_purge_items
 ===========================
 
