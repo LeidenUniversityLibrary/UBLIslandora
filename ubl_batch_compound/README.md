@@ -1,3 +1,5 @@
++Deprecated: Use module at https://github.com/LeidenUniversityLibrary/ubl_batch_compound
+
 ubl_batch_compound
 ===========================
 
