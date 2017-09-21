@@ -1,3 +1,7 @@
+This repository is deprecated. The modules it contains are moved to https://github.com/LeidenUniversityLibrary.
+The wiki is still used for documentation purposes.
+
+
 # Islandora
 
 This git repository contains some Leiden University Library (UniversiteitsBibliotheek Leiden) specific modules for Islandora. 
